@@ -16,7 +16,7 @@ import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/shared/Loader";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createUserAccount } from "@/lib/appwrite/api";
 import { toast } from "sonner";
 import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations";
@@ -31,11 +31,14 @@ interface Field {
 
 const SignupForm = () => {
   // const isLoading =  false;
+  
+  const { checkAuthUser, isLoading : isUserLoading } = useCreateUserAccount();
+  const navigate = useNavigate();
 
 
-  const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccount();
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
 
-  const { mutateAsync: signInAccount, isLoading: isSigningIn } = useSignInAccount();
+  const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount();
 
 
   // 1. Define your form.
@@ -64,6 +67,16 @@ const SignupForm = () => {
     })
     if (!session) {
       return toast('Sign in failed. Please try again.')
+    }
+
+    const isLoggedIn = await checkAuthUser();
+
+    if (isLoggedIn) {
+      form.reset()
+
+      navigate("/");
+    } else {
+      return toast("Sign up failed. Please try again.");
     }
 
   }

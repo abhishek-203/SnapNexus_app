@@ -38,9 +38,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const navigate =  useNavigate();
+    const navigate = useNavigate();
 
-    const checkAuthUser = async () => {
+    const checkAuthUser = async () => { 
         try {
             const currentAccount = await getCurrentUser();
 
@@ -66,15 +66,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             setIsLoading(false);
         }
     };
-useEffect(() => {
-    if (
-        localStorage.getItem('cookieFallback') === '[]' ||
-        localStorage.getItem('cookieFallback') === null
-    )   navigate('/sign-in');
-     
-    checkAuthUser()
-    
-}, []);
+    useEffect(() => {
+        if (
+            localStorage.getItem('cookieFallback') === '[]' 
+            || localStorage.getItem('cookieFallback') === null
+        ) navigate('/sign-in');
+
+        checkAuthUser()
+
+    }, []);
 
     const value = {
         user,
@@ -95,4 +95,4 @@ useEffect(() => {
 export { AuthProvider };
 export default AuthContext;
 
-export const useUserContext = () => useContext(AuthContext); h'01
+export const useUserContext = () => useContext(AuthContext);
